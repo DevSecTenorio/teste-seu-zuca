@@ -57,6 +57,13 @@
       "when": 1789147805212,
       "tag": "0007_add_order_invoice",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789483443623,
+      "tag": "0008_add_banner_show_title",
+      "breakpoints": true
     }
   ]
 }

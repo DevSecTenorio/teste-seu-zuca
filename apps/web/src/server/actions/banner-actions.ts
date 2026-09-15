@@ -31,6 +31,8 @@ export async function createBannerAction(_prevState: FormState, formData: FormDa
   });
   if (!parsed.success) return { status: "error", fieldErrors: parsed.error.flatten().fieldErrors };
 
+  const showTitle = formData.get("showTitle") === "on";
+
   const image = formData.get("image");
   if (!(image instanceof File) || image.size === 0) {
     return { status: "error", fieldErrors: { image: ["Envie uma imagem para o banner."] } };
@@ -53,6 +55,7 @@ export async function createBannerAction(_prevState: FormState, formData: FormDa
       subtitle: parsed.data.subtitle || null,
       imageUrl,
       link: parsed.data.link || null,
+      showTitle,
       order: (maxOrder?.order ?? -1) + 1,
       active: true,
     })
@@ -76,6 +79,8 @@ export async function updateBannerAction(bannerId: string, _prevState: FormState
   const before = await db.query.banners.findFirst({ where: eq(schema.banners.id, bannerId) });
   if (!before) return { status: "error", message: "Banner não encontrado." };
 
+  const showTitle = formData.get("showTitle") === "on";
+
   const image = formData.get("image");
   let imageUrl = before.imageUrl;
   if (image instanceof File && image.size > 0) {
@@ -95,6 +100,7 @@ export async function updateBannerAction(bannerId: string, _prevState: FormState
       subtitle: parsed.data.subtitle || null,
       imageUrl,
       link: parsed.data.link || null,
+      showTitle,
     })
     .where(eq(schema.banners.id, bannerId));
 

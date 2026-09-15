@@ -24,7 +24,7 @@ export function BannerFormDialog({
   banner,
 }: {
   mode: "create" | "edit";
-  banner?: { id: string; title: string; highlight: string | null; subtitle: string | null; link: string | null };
+  banner?: { id: string; title: string; highlight: string | null; subtitle: string | null; link: string | null; showTitle: boolean };
 }) {
   const [open, setOpen] = useState(false);
   const action = mode === "edit" && banner ? updateBannerAction.bind(null, banner.id) : createBannerAction;
@@ -70,6 +70,18 @@ export function BannerFormDialog({
           <div className="space-y-2">
             <Label htmlFor="link">Link (opcional)</Label>
             <Input id="link" name="link" defaultValue={banner?.link ?? ""} placeholder="/catalogo?categoria=argamassa" />
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              id="showTitle"
+              name="showTitle"
+              type="checkbox"
+              defaultChecked={banner?.showTitle ?? true}
+              className="size-4 rounded border-input"
+            />
+            <Label htmlFor="showTitle" className="font-normal">
+              Exibir título/destaque/subtítulo sobre a imagem
+            </Label>
           </div>
           <div className="space-y-2">
             <Label htmlFor="image">{mode === "create" ? "Imagem" : "Substituir imagem (opcional)"}</Label>

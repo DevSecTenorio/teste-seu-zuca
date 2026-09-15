@@ -1,0 +1,1 @@
+ALTER TABLE "banners" ADD COLUMN "show_title" boolean DEFAULT true NOT NULL;

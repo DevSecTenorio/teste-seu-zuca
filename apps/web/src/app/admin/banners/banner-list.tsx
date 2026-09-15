@@ -17,6 +17,7 @@ type Banner = {
   link: string | null;
   imageUrl: string;
   active: boolean;
+  showTitle: boolean;
 };
 
 /** Native HTML5 drag-and-drop reordering — no extra dependency. Order is optimistic locally,

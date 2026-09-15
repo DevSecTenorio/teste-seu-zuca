@@ -13,6 +13,7 @@ export type BannerData = {
   subtitle: string | null;
   imageUrl: string;
   link: string | null;
+  showTitle: boolean;
 };
 
 const AUTOPLAY_MS = 6000;
@@ -39,16 +40,20 @@ export function BannerCarousel({ banners }: { banners: BannerData[] }) {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
-      <div className="absolute inset-0 flex flex-col justify-center gap-2 px-6 sm:px-12">
-        {banner.highlight && (
-          <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-            {banner.highlight}
-          </span>
-        )}
-        <h2 className="max-w-xl text-2xl font-semibold text-white sm:text-4xl">{banner.title}</h2>
-        {banner.subtitle && <p className="max-w-md text-sm text-white/90 sm:text-base">{banner.subtitle}</p>}
-      </div>
+      {banner.showTitle && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 flex flex-col justify-center gap-2 px-6 sm:px-12">
+            {banner.highlight && (
+              <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                {banner.highlight}
+              </span>
+            )}
+            <h2 className="max-w-xl text-2xl font-semibold text-white sm:text-4xl">{banner.title}</h2>
+            {banner.subtitle && <p className="max-w-md text-sm text-white/90 sm:text-base">{banner.subtitle}</p>}
+          </div>
+        </>
+      )}
     </div>
   );
 
