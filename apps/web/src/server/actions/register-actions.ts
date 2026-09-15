@@ -78,18 +78,23 @@ async function registerCompanyAccount(role: Role, formData: FormData): Promise<F
 
   // Uploads happen outside the DB transaction (external I/O); the transaction only persists rows.
   const uploads: { type: "cartao_cnpj" | "contrato_social" | "outro"; fileName: string; fileUrl: string }[] = [];
-  uploads.push({
-    type: "cartao_cnpj",
-    fileName: cartaoCnpjFile!.name,
-    fileUrl: await uploadKycDocument(cartaoCnpjFile!, "kyc"),
-  });
-  uploads.push({
-    type: "contrato_social",
-    fileName: contratoSocialFile!.name,
-    fileUrl: await uploadKycDocument(contratoSocialFile!, "kyc"),
-  });
-  for (const file of outrosFiles) {
-    uploads.push({ type: "outro", fileName: file.name, fileUrl: await uploadKycDocument(file, "kyc") });
+  try {
+    uploads.push({
+      type: "cartao_cnpj",
+      fileName: cartaoCnpjFile!.name,
+      fileUrl: await uploadKycDocument(cartaoCnpjFile!, "kyc"),
+    });
+    uploads.push({
+      type: "contrato_social",
+      fileName: contratoSocialFile!.name,
+      fileUrl: await uploadKycDocument(contratoSocialFile!, "kyc"),
+    });
+    for (const file of outrosFiles) {
+      uploads.push({ type: "outro", fileName: file.name, fileUrl: await uploadKycDocument(file, "kyc") });
+    }
+  } catch (error) {
+    console.error("Falha ao enviar documentos de KYC:", error);
+    return { status: "error", message: "Falha ao enviar os documentos. Tente novamente em instantes." };
   }
 
   const passwordHash = await hashPassword(data.password);

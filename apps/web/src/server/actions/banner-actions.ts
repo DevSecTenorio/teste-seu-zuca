@@ -35,7 +35,13 @@ export async function createBannerAction(_prevState: FormState, formData: FormDa
   if (!(image instanceof File) || image.size === 0) {
     return { status: "error", fieldErrors: { image: ["Envie uma imagem para o banner."] } };
   }
-  const imageUrl = await uploadFile(image, "banners");
+  let imageUrl: string;
+  try {
+    imageUrl = await uploadFile(image, "banners");
+  } catch (error) {
+    console.error("Falha ao enviar imagem do banner:", error);
+    return { status: "error", fieldErrors: { image: ["Falha ao enviar a imagem. Tente novamente em instantes."] } };
+  }
 
   const maxOrder = await db.query.banners.findFirst({ orderBy: (b, { desc }) => [desc(b.order)] });
 
@@ -71,7 +77,15 @@ export async function updateBannerAction(bannerId: string, _prevState: FormState
   if (!before) return { status: "error", message: "Banner não encontrado." };
 
   const image = formData.get("image");
-  const imageUrl = image instanceof File && image.size > 0 ? await uploadFile(image, "banners") : before.imageUrl;
+  let imageUrl = before.imageUrl;
+  if (image instanceof File && image.size > 0) {
+    try {
+      imageUrl = await uploadFile(image, "banners");
+    } catch (error) {
+      console.error("Falha ao enviar imagem do banner:", error);
+      return { status: "error", fieldErrors: { image: ["Falha ao enviar a imagem. Tente novamente em instantes."] } };
+    }
+  }
 
   await db
     .update(schema.banners)

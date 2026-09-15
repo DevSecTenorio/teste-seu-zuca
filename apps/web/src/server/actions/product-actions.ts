@@ -55,7 +55,13 @@ export async function createProductAction(_prevState: FormState, formData: FormD
   });
 
   const files = imageFiles(formData);
-  const imageUrls = await Promise.all(files.map((file) => uploadFile(file, "products")));
+  let imageUrls: string[];
+  try {
+    imageUrls = await Promise.all(files.map((file) => uploadFile(file, "products")));
+  } catch (error) {
+    console.error("Falha ao enviar imagens do produto:", error);
+    return { status: "error", fieldErrors: { images: ["Falha ao enviar as imagens. Tente novamente em instantes."] } };
+  }
 
   const [product] = await db
     .insert(schema.products)
@@ -122,7 +128,13 @@ export async function updateProductAction(
 
   const removedImageIds = formData.getAll("removeImage").filter((v): v is string => typeof v === "string");
   const newFiles = imageFiles(formData);
-  const newImageUrls = await Promise.all(newFiles.map((file) => uploadFile(file, "products")));
+  let newImageUrls: string[];
+  try {
+    newImageUrls = await Promise.all(newFiles.map((file) => uploadFile(file, "products")));
+  } catch (error) {
+    console.error("Falha ao enviar imagens do produto:", error);
+    return { status: "error", fieldErrors: { images: ["Falha ao enviar as imagens. Tente novamente em instantes."] } };
+  }
 
   // Any edit through this form is treated as sensitive and re-opens moderation (ROADMAP Fase 2 /
   // CLAUDE.md), including stock-only tweaks — a lighter "quick stock update" action that skips

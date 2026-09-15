@@ -149,7 +149,13 @@ export async function supplierAttachInvoiceAction(orderId: string, _prevState: F
     return { status: "error", message: "Este pedido ainda não pode receber nota fiscal." };
   }
 
-  const invoiceUrl = await uploadInvoiceDocument(invoiceFile!, "invoices");
+  let invoiceUrl: string;
+  try {
+    invoiceUrl = await uploadInvoiceDocument(invoiceFile!, "invoices");
+  } catch (error) {
+    console.error("Falha ao enviar nota fiscal:", error);
+    return { status: "error", fieldErrors: { invoiceFile: ["Falha ao enviar o arquivo. Tente novamente em instantes."] } };
+  }
   await db
     .update(schema.orders)
     .set({ invoiceUrl, invoiceFileName: invoiceFile!.name, invoiceUploadedAt: new Date(), updatedAt: new Date() })
