@@ -3,6 +3,7 @@ import { Truck, Building2, ShieldCheck, Percent, ArrowRight } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { BannerCarousel } from "@/components/banner-carousel";
+import { TestSiteNotice } from "@/components/test-site-notice";
 import { getCategoryIcon } from "@/lib/icons";
 import { listTopLevelActiveCategories } from "@/server/actions/category-actions";
 import { getActiveBanners, getFeaturedProducts } from "@/server/queries/storefront";
@@ -49,6 +50,8 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
+      <TestSiteNotice />
+
       {banners.length > 0 && (
         <section className="mx-auto w-full max-w-7xl px-4 pt-6 pb-6 sm:px-6 lg:px-8">
           <BannerCarousel banners={banners} />
