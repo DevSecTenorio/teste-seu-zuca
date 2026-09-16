@@ -1,10 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Truck, Building2, ShieldCheck, Percent, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { BannerCarousel } from "@/components/banner-carousel";
 import { TestSiteNotice } from "@/components/test-site-notice";
-import { getCategoryIcon } from "@/lib/icons";
 import { listTopLevelActiveCategories } from "@/server/actions/category-actions";
 import { getActiveBanners, getFeaturedProducts } from "@/server/queries/storefront";
 
@@ -13,6 +13,16 @@ const TRUST_BADGES = [
   { icon: Percent, label: "Preços exclusivos PJ" },
   { icon: ShieldCheck, label: "Compra segura" },
   { icon: Building2, label: "Exclusivo pessoa jurídica" },
+];
+
+// Selos ilustrados da marca (imagens/SZ_06 a SZ_10) usados nos cards de categoria da home,
+// ciclados por índice — não há um selo dedicado por categoria, apenas 5 variações decorativas.
+const CATEGORY_CARD_IMAGES = [
+  "/categorias/sz-06.png",
+  "/categorias/sz-07.png",
+  "/categorias/sz-08.png",
+  "/categorias/sz-09.png",
+  "/categorias/sz-10.png",
 ];
 
 // Three themed highlight blocks (SPEC.md §4). Slugs match the official category seed; a block
@@ -74,17 +84,14 @@ export default async function Home() {
           <h2 className="font-display text-2xl uppercase tracking-wide text-foreground">Categorias</h2>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
             {categories.map((category, index) => {
-              const Icon = getCategoryIcon(category.icon);
-              const swatch = index % 2 === 0 ? "bg-primary" : "bg-brand-orange";
+              const image = CATEGORY_CARD_IMAGES[index % CATEGORY_CARD_IMAGES.length];
               return (
                 <Link
                   key={category.id}
                   href={`/catalogo?categoria=${category.slug}`}
                   className="flex flex-col items-center gap-2 rounded-lg border bg-card p-4 text-center transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md"
                 >
-                  <span className={`flex size-11 items-center justify-center rounded-full text-primary-foreground ${swatch}`}>
-                    <Icon className="size-5" />
-                  </span>
+                  <Image src={image} alt="" width={56} height={56} className="size-11" />
                   <span className="text-sm font-medium text-foreground">{category.name}</span>
                 </Link>
               );
